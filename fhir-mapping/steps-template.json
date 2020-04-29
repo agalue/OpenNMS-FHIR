@@ -1,0 +1,16 @@
+{
+    "templateType": "JsonPathContent",
+    "template": {
+        "typeName": "stepcount",
+        "typeMatchExpression": "$..[?(@steps)]",
+        "deviceIdExpression": "$.deviceId",
+        "timestampExpression": "$.endDate",
+        "values": [
+            {
+                "required": "true",
+                "valueExpression": "$.steps",
+                "valueName": "steps"
+            }
+        ]
+    }
+}

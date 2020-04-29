@@ -1,0 +1,13 @@
+FROM golang:alpine AS builder
+WORKDIR /app
+ADD ./ /app/
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags musl -a -o sample-consumer ./consumer
+
+FROM alpine
+ENV EVENT_HUB_CONNECTION_STR=""
+RUN addgroup -S onms && adduser -S -G onms onms
+COPY --from=builder /app/sample-consumer /sample-consumer
+USER onms
+LABEL maintainer="Alejandro Galue <agalue@opennms.org>" \
+      name="OpenNMS Sample Consumer for Health Data"
+ENTRYPOINT /sample-consumer -connection-str "$EVENT_HUB_CONNECTION_STR"

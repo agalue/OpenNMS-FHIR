@@ -1,0 +1,22 @@
+http-url: "http://opennms:8980/opennms"
+id: "fhir-minion"
+location: "Docker"
+ipc:
+  rpc:
+    kafka:
+      single-topic: true
+      bootstrap.servers: "kafka:9092"
+  sink:
+    kafka:
+      bootstrap.servers: "kafka:9092"
+      acks: 1
+telemetry:
+  flows:
+    listeners:
+      FHIR-Listener:
+        class-name: org.opennms.netmgt.telemetry.listeners.UdpListener
+        parameters:
+          port: 4444
+        parsers:
+          FHIR:
+            class-name: org.opennms.netmgt.telemetry.protocols.common.parser.ForwardParser

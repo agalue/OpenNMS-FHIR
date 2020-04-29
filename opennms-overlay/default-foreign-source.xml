@@ -1,0 +1,18 @@
+<foreign-source xmlns="http://xmlns.opennms.org/xsd/config/foreign-source" name="default" date-stamp="2018-01-01T00:00:00.000-05:00">
+  <scan-interval>1d</scan-interval>
+  <detectors>
+    <detector name="ICMP" class="org.opennms.netmgt.provision.detector.icmp.IcmpDetector"/>
+    <detector name="SNMP" class="org.opennms.netmgt.provision.detector.snmp.SnmpDetector"/>
+  </detectors>
+  <policies>
+    <policy name="Do Not Persist Discovered IPs" class="org.opennms.netmgt.provision.persist.policies.MatchingIpInterfacePolicy">
+      <parameter key="action" value="DO_NOT_PERSIST"/>
+      <parameter key="matchBehavior" value="NO_PARAMETERS"/>
+    </policy>
+    <policy name="Enable Data Collection" class="org.opennms.netmgt.provision.persist.policies.MatchingSnmpInterfacePolicy">
+      <parameter key="action" value="ENABLE_COLLECTION"/>
+      <parameter key="matchBehavior" value="ANY_PARAMETER"/>
+      <parameter key="ifOperStatus" value="1"/>
+    </policy>
+  </policies>
+</foreign-source>

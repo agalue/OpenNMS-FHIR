@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<telemetryd-config>
+  <listener name="FHIR-UDP-4444" class-name="org.opennms.netmgt.telemetry.listeners.UdpListener" enabled="true">
+    <parameter key="port" value="4444"/>
+    <parser name="FHIR-GPB" class-name="org.opennms.netmgt.telemetry.protocols.common.parser.ForwardParser" queue="FHIR"/>
+  </listener>
+  <queue name="FHIR">
+    <adapter name="FHIR-GPB" class-name="org.opennms.netmgt.telemetry.protocols.nxos.adapter.NxosGpbAdapter" enabled="true">
+      <parameter key="script" value="/opt/opennms/etc/telemetryd-adapters/fhir-telemetry.groovy"/>
+      <package name="FHIR-Default">
+        <rrd step="30">
+          <rra>RRA:AVERAGE:0.5:1:2016</rra>
+          <rra>RRA:AVERAGE:0.5:12:1488</rra>
+          <rra>RRA:AVERAGE:0.5:288:366</rra>
+          <rra>RRA:MAX:0.5:288:366</rra>
+          <rra>RRA:MIN:0.5:288:366</rra>
+        </rrd>
+      </package>
+    </adapter>
+  </queue>
+</telemetryd-config>

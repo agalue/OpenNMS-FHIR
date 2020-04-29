@@ -1,0 +1,20 @@
+{
+    "templateType": "CodeValueFhir",
+    "template": {
+        "codes": [
+            {
+                "code": "55423-8",
+                "system": "http://loinc.org",
+                "display": "Number of steps"
+            }
+        ],        
+        "periodInterval": 60,
+        "typeName": "stepsCount",
+        "value": {
+            "defaultPeriod": 5000,
+            "unit": "",
+            "valueName": "steps",
+            "valueType": "SampledData"
+        }
+    }
+}
