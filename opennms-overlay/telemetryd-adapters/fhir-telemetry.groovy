@@ -12,8 +12,8 @@ class CollectionSetGenerator {
     def nodeLevelResource = new NodeLevelResource(agent.getNodeId())
     builder.withNumericAttribute(nodeLevelResource, "fhir-stats", "heartRate",
       NxosGpbParserUtil.getValueAsDouble(telemetryMsg, "heartRate"), AttributeType.GAUGE)
-    builder.withNumericAttribute(nodeLevelResource, "fhir-stats", "steps",
-      NxosGpbParserUtil.getValueAsDouble(telemetryMsg, "steps"), AttributeType.COUNTER)
+    builder.withNumericAttribute(nodeLevelResource, "fhir-stats", "stepCount",
+      NxosGpbParserUtil.getValueAsDouble(telemetryMsg, "stepCount"), AttributeType.COUNTER)
   }
 }
 

@@ -89,7 +89,7 @@ func createCollectionSet(nodeID int64, nodeLabel string) *producer.CollectionSet
 						Value: float64(60 + rand.Intn(100)),
 					},
 					{
-						Name:  "steps",
+						Name:  "stepCount",
 						Type:  producer.NumericAttribute_COUNTER,
 						Value: float64(totalSteps),
 					},

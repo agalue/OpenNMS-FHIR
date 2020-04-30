@@ -64,7 +64,7 @@ func createTelemetryData(hostname string) *telemetry_bis.Telemetry {
 				},
 			},
 			{
-				Name:      "steps", // Counter
+				Name:      "stepCount", // Counter
 				Timestamp: ts,
 				ValueByType: &telemetry_bis.TelemetryField_Uint32Value{
 					Uint32Value: uint32(totalSteps),

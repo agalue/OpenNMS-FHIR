@@ -2,7 +2,7 @@
     "templateType": "JsonPathContent",
     "template": {
         "typeName": "stepcount",
-        "typeMatchExpression": "$..[?(@steps)]",
+        "typeMatchExpression": "$..[?(@stepCount)]",
         "deviceIdExpression": "$.deviceId",
         "timestampExpression": "$.endDate",
         "values": [

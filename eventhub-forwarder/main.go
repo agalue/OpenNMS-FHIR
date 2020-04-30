@@ -82,7 +82,7 @@ func (cli *eventHubClient) forward(cset *producer.CollectionSet) error {
 	metricsAdded := 0
 	for _, metric := range strings.Split(cli.variables, ",") {
 		if value, ok := cli.getMetricValue(resource, metric); ok {
-			message.Body[metric] = fmt.Sprintf("%f", value)
+			message.Body[metric] = fmt.Sprintf("%.0f", value)
 			metricsAdded++
 		}
 	}
@@ -185,7 +185,7 @@ func main() {
 	flag.StringVar(&kcli.groupID, "group-id", "kafka-converter", "kafka consumer group ID")
 	flag.StringVar(&kcli.consumerSettings, "consumer-params", "", "optional kafka consumer parameters as a CSV of Key-Value pairs")
 	flag.StringVar(&ehcli.connectionStr, "connection-str", "", "Azure Event Hub Connection String")
-	flag.StringVar(&ehcli.variables, "metrics-list", "heartRate,steps", "List of metrics to forward to Event Hub as a CSV list")
+	flag.StringVar(&ehcli.variables, "metrics-list", "heartRate,stepCount", "List of metrics to forward to Event Hub as a CSV list")
 	flag.Parse()
 
 	if err := kcli.start(); err != nil {

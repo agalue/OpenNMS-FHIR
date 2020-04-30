@@ -33,7 +33,7 @@ For example:
 {
   "Body": {
     "heartRate": "78",
-    "steps": "100",
+    "stepCount": "100",
     "endDate": "2020-04-29T10:46:01Z",
     "deviceId": "mock-device-001"
   },
@@ -67,13 +67,13 @@ cat <<EOF > generate-requisition.sh
 #!/bin/sh
 LOCATION=Docker
 REQUISITION=Test
-NAME=mock-device-001
+DEVICE_ID=mock-device-001
 IP=$(docker container inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' generator)
 /opt/opennms/bin/provision.pl requisition add \$REQUISITION
-/opt/opennms/bin/provision.pl node add \$REQUISITION \$NAME \$NAME
-/opt/opennms/bin/provision.pl node set \$REQUISITION \$NAME location \$LOCATION
-/opt/opennms/bin/provision.pl interface add \$REQUISITION \$NAME \$IP
-/opt/opennms/bin/provision.pl interface set \$REQUISITION \$NAME \$IP snmp-primary N
+/opt/opennms/bin/provision.pl node add \$REQUISITION \$DEVICE_ID \$NAME
+/opt/opennms/bin/provision.pl node set \$REQUISITION \$DEVICE_ID location \$LOCATION
+/opt/opennms/bin/provision.pl interface add \$REQUISITION \$DEVICE_ID \$IP
+/opt/opennms/bin/provision.pl interface set \$REQUISITION \$DEVICE_ID \$IP snmp-primary N
 /opt/opennms/bin/provision.pl requisition import \$REQUISITION
 EOF
 chmod +x generate-requisition.sh

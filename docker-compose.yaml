@@ -148,7 +148,7 @@ services:
       timeout: 5s
       retries: 3
 
-  # Generate random numbers for heart rate and steps using NX-OS Telemetry Object
+  # Generate random numbers for heart rate and step count using NX-OS Telemetry Object
   generator:
     container_name: generator
     hostname: generator
