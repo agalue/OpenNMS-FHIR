@@ -158,7 +158,7 @@ services:
     environment:
     - TZ=America/New_York
     - TARGET=minion:4444
-    - FREQUENCY=30s
+    - FREQUENCY=300s
 
   # Parses CollectionSets with health data sent by the Kafka Producer and forwards them to Azure Event Hub
   # Make sure to set FORWARDER_EVENT_HUB_CONNECTION_STR on your host prior start the environment

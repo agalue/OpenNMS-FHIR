@@ -67,10 +67,10 @@ cat <<EOF > generate-requisition.sh
 #!/bin/sh
 LOCATION=Docker
 REQUISITION=Test
-DEVICE_ID=mock-device-001
+DEVICE_ID=${DEVICE_ID-mock-device-001}
 IP=$(docker container inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' generator)
 /opt/opennms/bin/provision.pl requisition add \$REQUISITION
-/opt/opennms/bin/provision.pl node add \$REQUISITION \$DEVICE_ID \$NAME
+/opt/opennms/bin/provision.pl node add \$REQUISITION \$DEVICE_ID \$DEVICE_ID
 /opt/opennms/bin/provision.pl node set \$REQUISITION \$DEVICE_ID location \$LOCATION
 /opt/opennms/bin/provision.pl interface add \$REQUISITION \$DEVICE_ID \$IP
 /opt/opennms/bin/provision.pl interface set \$REQUISITION \$DEVICE_ID \$IP snmp-primary N
@@ -95,6 +95,16 @@ docker run -it --rm \
 ```
 
 Note that in this case, the connection string must have `Listen` permissions.
+
+## Clean up
+
+From the root directory after checking out this repository on your machine:
+
+```bash
+docker-compose down -v
+```
+
+> Make sure the environment variables of the connection strings are set; otherwise the validation and `docker-compose` won't run.
 
 ## Pending
 
