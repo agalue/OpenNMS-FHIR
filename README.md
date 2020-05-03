@@ -7,7 +7,7 @@ https://github.com/microsoft/iomt-fhir
 
 ## Architecture
 
-![Diagram](assets/FHIR-Architecture.png)
+![Diagram](assets/FHIR-Demo.001.png)
 
 An Apple Watch application called [Graphite Heart](https://github.com/RangerRick/graphite-heart) was designed to send heart rate data over UDP using [Graphite](https://graphiteapp.org/) format. To parse this, a Graphite Adapter was implemented in OpenNMS that will be part of Horizon 26.1.0.
  
