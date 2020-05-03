@@ -23,9 +23,13 @@ do
   fi
 done
 
-exec /eventhub-forwarder \
-  -bootstrap "${BOOTSTRAP_SERVERS}" \
-  -source-topic "${SOURCE_TOPIC}" \
-  -group-id "${GROUP_ID-opennms}" \
-  -connection-str "${EVENT_HUB_CONNECTION_STR}" \
-  -consumer-params "$(join , ${CONSUMER[@]})"
+args=()
+[[ "${BOOTSTRAP_SERVERS}" != "" ]] && args+=( "-bootstrap" ${BOOTSTRAP_SERVERS} )
+[[ "${SOURCE_TOPIC}" != "" ]] && args+=( "-source-topic" ${SOURCE_TOPIC} )
+[[ "${GROUP_ID}" != "" ]] && args+=( "-group-id" ${GROUP_ID} )
+[[ "${EVENT_HUB_CONNECTION_STR}" != "" ]] && args+=( "-connection-str" ${EVENT_HUB_CONNECTION_STR} )
+[[ "${DEBUG}" != "" ]] && args+=( "-debug" )
+args+=( "-consumer-params" "$(join , ${CONSUMER[@]})" )
+
+echo "Parmeters: ${args[@]}"
+exec /eventhub-forwarder "${args[@]}"
