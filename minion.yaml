@@ -13,10 +13,10 @@ ipc:
 telemetry:
   flows:
     listeners:
-      FHIR-Listener:
+      Graphite-UDP-2003:
         class-name: org.opennms.netmgt.telemetry.listeners.UdpListener
         parameters:
-          port: 4444
+          port: 2003
         parsers:
-          FHIR:
+          Graphite:
             class-name: org.opennms.netmgt.telemetry.protocols.common.parser.ForwardParser

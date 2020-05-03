@@ -82,7 +82,7 @@ services:
   opennms:
     container_name: opennms
     hostname: opennms
-    image: agalue/horizon:26.0.0 # To avoid NMS-12688
+    image: agalue/horizon:26.1.0-graphite
     depends_on:
     - database
     - kafka
@@ -107,14 +107,14 @@ services:
   minion:
     container_name: minion
     hostname: minion
-    image: opennms/minion:26.0.0
+    image: agalue/minion:26.1.0-graphite
     depends_on:
     - kafka
     - opennms
     command: [ -c ]
     ports:
     - 8201:8201
-    - 4444:4444/udp
+    - 2003:2003/udp
     volumes:
     - ./minion.yaml:/opt/minion/minion-config.yaml
     environment:
@@ -126,18 +126,6 @@ services:
       interval: 1m
       timeout: 5s
       retries: 3
-
-  # Generate random numbers for heart rate and step count using NX-OS Telemetry Object
-  generator:
-    container_name: generator
-    hostname: generator
-    image: agalue/fhir-sample-generator
-    depends_on:
-    - minion
-    environment:
-      TZ: America/New_York
-      TARGET: minion:4444
-      FREQUENCY: 300s
 
   # Parses CollectionSets with health data sent by the Kafka Producer and forwards them to Azure Event Hub
   # Make sure to set FORWARDER_EVENT_HUB_CONNECTION_STR on your host prior start the environment
