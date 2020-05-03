@@ -30,9 +30,14 @@ type eventHubClient struct {
 	connectionStr string
 	variables     string
 	hub           *eventhub.Hub
+	debug         bool
 }
 
 func (cli *eventHubClient) init() error {
+	if cli.debug {
+		fmt.Printf("DEBUG mode enabled. Event Hub forwarding will be ignored.")
+		return nil
+	}
 	if cli.connectionStr == "" {
 		return fmt.Errorf("Azure Event Hub Connection String cannot be empty")
 	}
@@ -44,6 +49,9 @@ func (cli *eventHubClient) init() error {
 }
 
 func (cli *eventHubClient) stop() {
+	if cli.hub == nil {
+		return
+	}
 	if err := cli.hub.Close(context.Background()); err != nil {
 		log.Println(err)
 	}
@@ -89,6 +97,9 @@ func (cli *eventHubClient) forward(cset *producer.CollectionSet) error {
 	if metricsAdded > 0 {
 		dataBytes, _ := json.Marshal(message)
 		log.Printf("Sending message to Event Hub: %s", string(dataBytes))
+		if cli.debug {
+			return nil
+		}
 		return cli.hub.Send(context.Background(), eventhub.NewEvent(dataBytes))
 	}
 	return fmt.Errorf("Couldn't find FHIR variables on the collection set for node %s, ignoring", resource.GetNode().NodeLabel)
@@ -181,9 +192,10 @@ func main() {
 	kcli := &kafkaClient{eventHubClient: ehcli}
 
 	flag.StringVar(&kcli.bootstrap, "bootstrap", "localhost:9092", "kafka bootstrap server")
-	flag.StringVar(&kcli.sourceTopic, "source-topic", "", "kafka source topic with OpenNMS Producer GPB messages")
+	flag.StringVar(&kcli.sourceTopic, "source-topic", "metrics", "kafka source topic with OpenNMS Producer GPB messages")
 	flag.StringVar(&kcli.groupID, "group-id", "kafka-converter", "kafka consumer group ID")
 	flag.StringVar(&kcli.consumerSettings, "consumer-params", "", "optional kafka consumer parameters as a CSV of Key-Value pairs")
+	flag.BoolVar(&ehcli.debug, "debug", false, "Enable DEBUG mode (print data to stdout and ignore Event Hub forwarding)")
 	flag.StringVar(&ehcli.connectionStr, "connection-str", "", "Azure Event Hub Connection String")
 	flag.StringVar(&ehcli.variables, "metrics-list", "heartRate,stepCount", "List of metrics to forward to Event Hub as a CSV list")
 	flag.Parse()
