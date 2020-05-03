@@ -1,31 +1,15 @@
 version: '3.7'
 
-volumes:
-
-  zookeeper:
-  kafka:
-  postgres:
-  onms_rrd:
-  onms_reports:
-  onms_mibs:
-
 services:
 
   zookeeper:
-    image: zookeeper:3.4
+    image: confluentinc/cp-zookeeper:5.5.0
     container_name: zookeeper
     hostname: zookeeper
-    volumes:
-    - zookeeper:/data
     environment:
-    - TZ=America/New_York
-    - ZOO_MY_ID=1
-    - ZOO_SERVERS=server.1=zookeeper:2888:3888
-    - JMXLOCALONLY=false
-    - JMXDISABLE=false
-    - JMXPORT=9998
-    - JMXAUTH=false
-    - JMXSSL=false
+      TZ: America/New_York
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     healthcheck:
       test: echo stat | nc zookeeper 2181
       interval: 30s
@@ -33,25 +17,25 @@ services:
       retries: 3
 
   kafka:
-    image: wurstmeister/kafka:2.12-2.4.1
+    image: confluentinc/cp-kafka:5.5.0
     container_name: kafka
     hostname: kafka
     depends_on:
     - zookeeper
-    volumes:
-    - kafka:/kafka
     environment:
-    - TZ=America/New_York
-    - KAFKA_BROKER_ID=1
-    - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://:9092
-    - KAFKA_LISTENERS=PLAINTEXT://:9092
-    - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181/kafka
-    - KAFKA_NUM_PARTITIONS=1
-    - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-    - KAFKA_DEFAULT_REPLICATION_FACTOR=1
-    - KAFKA_MIN_INSYNC_REPLICAS=1
-    - JMX_PORT=9999
-    - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=9999
+      TZ: America/New_York
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      KAFKA_LOG_RETENTION_HOURS: 3
+      KAFKA_LOG_ROLL_HOURS: 1
+      JMX_PORT: 9999
+      KAFKA_JMX_OPTS: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=9999
     ports:
     - 9092:9092
     healthcheck:
@@ -69,8 +53,8 @@ services:
     ports:
     - 9000:9000 
     environment:
-    - TZ=America/New_York
-    - ZK_HOSTS=zookeeper:2181
+      TZ: America/New_York
+      ZK_HOSTS: zookeeper:2181
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost:9000 || exit 1
       interval: 1m
@@ -81,16 +65,14 @@ services:
     container_name: database
     hostname: database
     image: postgres:12
-    volumes:
-    - postgres:/var/lib/postgresql/data
     ports:
     - 5432:5432
     environment:
-    - TZ=America/New_York
-    - POSTGRES_HOST=database
-    - POSTGRES_PORT=5432
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=postgres
+      TZ: America/New_York
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 30s
@@ -110,15 +92,12 @@ services:
     - 8101:8101
     volumes:
     - ./opennms-overlay:/opt/opennms-etc-overlay
-    - onms_mibs:/opennms-data/mibs
-    - onms_rrd:/opennms-data/rrd
-    - onms_reports:/opennms-data/reports
     environment:
-    - TZ=America/New_York
-    - POSTGRES_HOST=database
-    - POSTGRES_PORT=5432
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=postgres
+      TZ: America/New_York
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     healthcheck:
       test: curl -f -I http://localhost:8980/opennms/login.jsp
       interval: 1m
@@ -139,9 +118,9 @@ services:
     volumes:
     - ./minion.yaml:/opt/minion/minion-config.yaml
     environment:
-    - TZ=America/New_York
-    - OPENNMS_HTTP_USER=admin
-    - OPENNMS_HTTP_PASS=admin
+      TZ: America/New_York
+      OPENNMS_HTTP_USER: admin
+      OPENNMS_HTTP_PASS: admin
     healthcheck:
       test: /health.sh
       interval: 1m
@@ -156,9 +135,9 @@ services:
     depends_on:
     - minion
     environment:
-    - TZ=America/New_York
-    - TARGET=minion:4444
-    - FREQUENCY=300s
+      TZ: America/New_York
+      TARGET: minion:4444
+      FREQUENCY: 300s
 
   # Parses CollectionSets with health data sent by the Kafka Producer and forwards them to Azure Event Hub
   # Make sure to set FORWARDER_EVENT_HUB_CONNECTION_STR on your host prior start the environment
@@ -169,9 +148,9 @@ services:
     depends_on:
     - opennms
     environment:
-    - TZ=America/New_York
-    - BOOTSTRAP_SERVERS=kafka:9092
-    - SOURCE_TOPIC=metrics
-    - GROUP_ID=forwarder
-    - EVENT_HUB_CONNECTION_STR=${FORWARDER_EVENT_HUB_CONNECTION_STR:?}
+      TZ: America/New_York
+      BOOTSTRAP_SERVERS: kafka:9092
+      SOURCE_TOPIC: metrics
+      GROUP_ID: forwarder
+      EVENT_HUB_CONNECTION_STR: ${FORWARDER_EVENT_HUB_CONNECTION_STR:?}
 
