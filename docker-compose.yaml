@@ -25,7 +25,7 @@ services:
     environment:
       TZ: America/New_York
       KAFKA_BROKER_ID: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.0.43:9092  # Use the external IP of the machine where Kafka is running
       KAFKA_LISTENERS: PLAINTEXT://:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_NUM_PARTITIONS: 1
@@ -100,29 +100,6 @@ services:
       POSTGRES_PASSWORD: postgres
     healthcheck:
       test: curl -f -I http://localhost:8980/opennms/login.jsp
-      interval: 1m
-      timeout: 5s
-      retries: 3
- 
-  minion:
-    container_name: minion
-    hostname: minion
-    image: agalue/minion:26.1.0-graphite
-    depends_on:
-    - kafka
-    - opennms
-    command: [ -c ]
-    ports:
-    - 8201:8201
-    - 2003:2003/udp
-    volumes:
-    - ./minion.yaml:/opt/minion/minion-config.yaml
-    environment:
-      TZ: America/New_York
-      OPENNMS_HTTP_USER: admin
-      OPENNMS_HTTP_PASS: admin
-    healthcheck:
-      test: /health.sh
       interval: 1m
       timeout: 5s
       retries: 3

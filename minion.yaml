@@ -1,14 +1,14 @@
-http-url: "http://opennms:8980/opennms"
+http-url: "http://192.168.0.43:8980/opennms" # Use the external IP of the machine where Kafka is running
 id: "fhir-minion"
-location: "Docker"
+location: "Durham"
 ipc:
   rpc:
     kafka:
       single-topic: true
-      bootstrap.servers: "kafka:9092"
+      bootstrap.servers: "192.168.0.43:9092" # Use the external IP of the machine where Kafka is running
   sink:
     kafka:
-      bootstrap.servers: "kafka:9092"
+      bootstrap.servers: "192.168.0.43:9092" # Use the external IP of the machine where Kafka is running
       acks: 1
 telemetry:
   flows:

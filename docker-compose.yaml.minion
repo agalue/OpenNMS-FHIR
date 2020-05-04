@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  minion:
+    container_name: minion
+    hostname: minion
+    image: opennms/minion:26.0.0
+    depends_on:
+    - kafka
+    - opennms
+    command: [ -c ]
+    ports:
+    - 8201:8201
+    - 2003:2003/udp
+    volumes:
+    - ./minion.yaml:/opt/minion/minion-config.yaml
+    environment:
+      TZ: America/New_York
+      OPENNMS_HTTP_USER: admin
+      OPENNMS_HTTP_PASS: admin
+    healthcheck:
+      test: /health.sh
+      interval: 1m
+      timeout: 5s
+      retries: 3
