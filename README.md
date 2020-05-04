@@ -59,7 +59,7 @@ Then, you can start the lab using Docker Compose, from the root directory after 
 docker-compose up -d
 ```
 
-Then, start the Graphite Heart App on your Apple Watch, configure the Minion IP (use the IP of the machine where Docker is running).
+Then, start the Graphite Heart App on your Apple Watch, configure the Minion IP.
 
 Once OpenNMS is up and running, it will be unable to forward the data until a node that represents the Apple Watch exists in the OpenNMS inventory.
 
