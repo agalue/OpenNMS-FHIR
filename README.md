@@ -69,7 +69,7 @@ For this check `karaf.log` to find out the IP of the device, you should see some
 2020-05-03T14:52:23,966 | WARN  | kafka-consumer-48 | AbstractAdapter                  | 312 - org.opennms.features.telemetry.protocols.adapters - 26.1.0.SNAPSHOT | Unable to determine collection agent from location=Docker and address=192.168.0.16
 ```
 
-Rhen export an environment variable called `APPLE_WATCH_IP` and do the following:
+Then export an environment variable called `APPLE_WATCH_IP` and do the following:
 
 ```bash
 LOCATION=Durham
