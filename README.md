@@ -36,18 +36,18 @@ docker-compose up -d
 When OpenNMS is up and running, you should create a requisition with the node that represents the Sample Generator and associate it with the Location used for the Minion, for example:
 
 ```bash
+LOCATION="Docker"
+REQUISITION="Test"
+DEVICE_ID="mock-device-001"
+DEVICE_IP=$(docker container inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' generator)
 cat <<EOF > generate-requisition.sh
 #!/bin/sh
-LOCATION=Docker
-REQUISITION=Test
-DEVICE_ID=${DEVICE_ID-mock-device-001}
-IP=$(docker container inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' generator)
-/opt/opennms/bin/provision.pl requisition add \$REQUISITION
-/opt/opennms/bin/provision.pl node add \$REQUISITION \$DEVICE_ID \$DEVICE_ID
-/opt/opennms/bin/provision.pl node set \$REQUISITION \$DEVICE_ID location \$LOCATION
-/opt/opennms/bin/provision.pl interface add \$REQUISITION \$DEVICE_ID \$IP
-/opt/opennms/bin/provision.pl interface set \$REQUISITION \$DEVICE_ID \$IP snmp-primary N
-/opt/opennms/bin/provision.pl requisition import \$REQUISITION
+/opt/opennms/bin/provision.pl requisition add $REQUISITION
+/opt/opennms/bin/provision.pl node add $REQUISITION $DEVICE_ID $DEVICE_ID
+/opt/opennms/bin/provision.pl node set $REQUISITION $DEVICE_ID location $LOCATION
+/opt/opennms/bin/provision.pl interface add $REQUISITION $DEVICE_ID $DEVICE_IP
+/opt/opennms/bin/provision.pl interface set $REQUISITION $DEVICE_ID $DEVICE_IP snmp-primary N
+/opt/opennms/bin/provision.pl requisition import $REQUISITION
 EOF
 chmod +x generate-requisition.sh
 docker cp generate-requisition.sh opennms:/opt/opennms/bin/
