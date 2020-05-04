@@ -17,8 +17,6 @@ The generator sends the UDP data to Telemetryd in OpenNMS.
 
 OpenNMS receives the data via the NX-OS GPB Adapter, and use a simple Groovy Script to parse and persist the data into RRD files.
 
-It is crucial to notice this solution assumes the usage of `node-level` variables only. Also, the node-label of the sender (i.e., the one that represents the Sample Generator in OpenNMS) will be used as the `Device ID` for `FHIR`.
-
 ## Run Test Environment
 
 This lab was designed to run with [Docker](https://docker.io), so make sure you have it installed on your system.
@@ -51,7 +49,7 @@ rm -f generate-requisition.sh
 
 ## Verify the solution
 
-Check if there is data on the RRD files on the OpenNMS container.
+Check if there is data on the RRD files on the OpenNMS container, and no exceptions on `karaf.log` or `telemetryd.log`.
 
 ## Clean up
 
