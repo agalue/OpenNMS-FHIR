@@ -82,7 +82,7 @@ services:
   opennms:
     container_name: opennms
     hostname: opennms
-    image: agalue/horizon:26.0.0 # To avoid NMS-12688
+    image: opennms/horizon:26.0.0
     depends_on:
     - database
     - kafka
