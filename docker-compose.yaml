@@ -82,7 +82,7 @@ services:
   opennms:
     container_name: opennms
     hostname: opennms
-    image: agalue/horizon:26.1.0-graphite
+    image: opennms/horizon:26.1.0
     depends_on:
     - database
     - kafka

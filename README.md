@@ -9,7 +9,7 @@ https://github.com/microsoft/iomt-fhir
 
 ![Diagram](assets/FHIR-Demo.001.png)
 
-An Apple Watch application called [Graphite Heart](https://github.com/RangerRick/graphite-heart) was designed to send heart rate data over UDP using [Graphite](https://graphiteapp.org/) format. To parse this, a Graphite Adapter was implemented in OpenNMS that will be part of Horizon 26.1.0.
+An Apple Watch application called [Graphite Heart](https://github.com/RangerRick/graphite-heart) was designed to send heart rate data over UDP using [Graphite](https://graphiteapp.org/) format. To parse this, a Graphite Adapter was implemented in OpenNMS, available in Horizon 26.1.0.
  
 The Graphite Heart app sends data via UDP to a Minion, which in turn forwards the data via `Sink API` to OpenNMS.
 
@@ -66,7 +66,7 @@ Once OpenNMS is up and running, it will be unable to forward the data until a no
 For this check `karaf.log` to find out the IP of the device, you should see something like this:
 
 ```
-2020-05-03T14:52:23,966 | WARN  | kafka-consumer-48 | AbstractAdapter                  | 312 - org.opennms.features.telemetry.protocols.adapters - 26.1.0.SNAPSHOT | Unable to determine collection agent from location=Docker and address=192.168.0.16
+2020-05-03T14:52:23,966 | WARN  | kafka-consumer-48 | AbstractAdapter                  | 312 - org.opennms.features.telemetry.protocols.adapters - 26.1.0 | Unable to determine collection agent from location=Docker and address=192.168.0.16
 ```
 
 Export an environment variable called `APPLE_WATCH_IP` with the IP from the above message, for example:
