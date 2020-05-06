@@ -82,7 +82,7 @@ services:
   opennms:
     container_name: opennms
     hostname: opennms
-    image: opennms/horizon:26.0.0
+    image: opennms/horizon:26.1.0
     depends_on:
     - database
     - kafka
@@ -107,7 +107,7 @@ services:
   minion:
     container_name: minion
     hostname: minion
-    image: opennms/minion:26.0.0
+    image: opennms/minion:26.1.0
     depends_on:
     - kafka
     - opennms
